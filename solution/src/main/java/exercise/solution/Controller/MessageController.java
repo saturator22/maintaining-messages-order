@@ -2,21 +2,33 @@ package exercise.solution.Controller;
 
 import exercise.solution.Model.Message;
 import exercise.solution.Service.MessageService;
+import exercise.solution.Service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/message")
 public class MessageController {
 
     @Autowired
     MessageService messageService;
 
-    @PostMapping
+    @Autowired
+    ResourceService resourceService;
+
+    @PostMapping("/message")
     public void storeMessage(@RequestBody Message message) {
         messageService.storeMessage(message);
+    }
+
+    @GetMapping("/resource")
+    public @ResponseBody List<Message> getMessages() {
+        return resourceService.getMessages();
+    }
+
+    @DeleteMapping("/empty")
+    public void clearMessages() {
+        resourceService.clearResource();
     }
 }
