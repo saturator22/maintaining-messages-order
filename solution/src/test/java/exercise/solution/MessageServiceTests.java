@@ -14,7 +14,7 @@ public class MessageServiceTests {
     MessageService messageService;
 
     @Test
-    public void storeInsufficientObjectTest() {
+    public void storeInadequateObjectTest() {
 
     }
 }
