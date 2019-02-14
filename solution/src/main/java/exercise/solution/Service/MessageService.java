@@ -1,7 +1,6 @@
 package exercise.solution.Service;
 
 import exercise.solution.Model.Message;
-import exercise.solution.Repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
