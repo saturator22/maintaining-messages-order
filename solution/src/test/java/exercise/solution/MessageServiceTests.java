@@ -1,5 +1,6 @@
 package exercise.solution;
 
+import exercise.solution.Service.MessageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
