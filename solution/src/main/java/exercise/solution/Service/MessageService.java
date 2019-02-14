@@ -1,7 +1,7 @@
 package exercise.solution.Service;
 
 import exercise.solution.Model.Message;
-import exercise.solution.Repository.MessageRepository;
+import exercise.solution.Repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 public class MessageService {
 
     @Autowired
-    MessageRepository messageRepository;
+    ResourceService resourceService;
 
     public void storeMessage(Message message) {
-        messageRepository.appendMessage(message);
+        resourceService.storeMessage(message);
     }
 }
