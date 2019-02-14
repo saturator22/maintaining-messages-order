@@ -8,7 +8,7 @@
 *.iml
 
 # idea folder
-./idea
+.idea/
 
 # BlueJ files
 *.ctxt
