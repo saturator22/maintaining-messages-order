@@ -1,23 +1,20 @@
 package exercise.solution.Model;
 
-public class Message {
+public class Message implements Communiquable, Comparable<Message>{
 
-    private long id;
+    private int id;
     private String message;
 
-    public long getId() {
+    public int getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    @Override
+    public int compareTo(Message otherMessage) {
+        return otherMessage == null ? 1 : this.id - otherMessage.getId();
     }
 }
