@@ -1,6 +1,6 @@
 package exercise.solution.Model;
 
-public class Message implements Communiquable, Comparable<Message>{
+public class Message implements Messegeable, Comparable<Message>{
 
     private int id;
     private String message;

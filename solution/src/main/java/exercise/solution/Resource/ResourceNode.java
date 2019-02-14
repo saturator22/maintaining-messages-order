@@ -6,7 +6,7 @@ class ResourceNode<T extends Comparable<T>> {
     public static final ResourceNodeColorEnum BLACK = ResourceNodeColorEnum.BLACK;
 
     //E.g. Message object
-    public T item;
+    T item;
 
     //Counters of nodes under the given node leftLeaf/rightLeaf
     int leftLeafsCounter;
