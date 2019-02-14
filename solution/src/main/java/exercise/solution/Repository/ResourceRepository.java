@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MessageRepository {
+public class ResourceRepository {
 
     List<Message> messageList = new ArrayList<>();
 
