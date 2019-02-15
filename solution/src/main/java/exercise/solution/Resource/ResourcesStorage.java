@@ -17,6 +17,10 @@ public class ResourcesStorage <T extends Comparable<T>>{
         appendNode(new ResourceNode<T>(item));
     }
 
+    public int size() {
+        return root.rightLeafsCounter + root.leftLeafsCounter + 1;
+    }
+
     private void appendNode(ResourceNode<T> node) {
 
         ResourceNode<T> currentParent = emptyNode;
@@ -43,7 +47,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
         node.parentNode = currentParent;
 
         //Assigning node to the root if it was first insertion or to the proper side of parent
-        if(isEmpty(currentNode)) {
+        if(isEmpty(currentParent)) {
             root = node;
         } else if(node.item.compareTo(currentParent.item) < 0) {
             currentParent.leftLeaf = node;
