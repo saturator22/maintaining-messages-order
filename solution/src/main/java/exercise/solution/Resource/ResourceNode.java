@@ -25,7 +25,7 @@ class ResourceNode<T extends Comparable<T>> {
         leftLeaf = null;
         rightLeaf = null;
         parentNode = null;
-        nodeColor = RED.colorValue();
+        nodeColor = BLACK.color;
         leftLeafsCounter = 0;
         rightLeafsCounter = 0;
     }
