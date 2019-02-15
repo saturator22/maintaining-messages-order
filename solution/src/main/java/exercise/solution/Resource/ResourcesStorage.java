@@ -122,4 +122,68 @@ public class ResourcesStorage <T extends Comparable<T>>{
         //Keeping root BLACK
         root.nodeColor = BLACK.color;
     }
+
+    private void rotateRight(ResourceNode<T> pivotNode) {
+
+        //Rotating pivotNode with newParent
+        //and assigning right leaf of newParent to left leaf of pivotNode
+        ResourceNode<T> newParent = pivotNode.leftLeaf;
+        pivotNode.leftLeaf = newParent.rightLeaf;
+
+        //Assiging pivotNode as parent of right leaf of newParent
+        //if it's not empty
+        if(!isEmpty(newParent.rightLeaf)) {
+            newParent.rightLeaf.parentNode = pivotNode;
+        }
+
+        //Making parent of pivotNode
+        //the parent of newParent
+        newParent.parentNode = pivotNode.parentNode;
+
+        //Assigning newParent to the root if parent of pivotNode is empty
+        if(isEmpty(pivotNode.parentNode)) {
+            root = newParent;
+        //Assigning newParent as a rightLeaf of parent for pivotNode
+        } else if(pivotNode.parentNode.rightLeaf == pivotNode) {
+            pivotNode.parentNode.rightLeaf = newParent;
+        //Assigning newParent as a leftLeaf of parent for pivotNode
+        } else {
+            pivotNode.parentNode.leftLeaf = newParent;
+        }
+        //Assigning newParent as a parent of pivotNode
+        //and making pivotNode the rightLeaf of newParent
+        newParent.rightLeaf = pivotNode;
+        pivotNode.parentNode = newParent;
+    }
+
+    private void rotateLeft(ResourceNode<T> pivotNode) {
+
+        //Rotating pivotNode with newParent
+        //and assigning leftLeaf of newParent to rightLeaf of pivotNode
+        ResourceNode<T> newParent = pivotNode.rightLeaf;
+        pivotNode.rightLeaf = newParent.leftLeaf;
+
+        //Assigning parent of newParent leftLeaf to pivotNode
+        if(!isEmpty(newParent.leftLeaf)) {
+            newParent.leftLeaf.parentNode = pivotNode;
+        }
+        //Assigning parentNode of pivotNode to parentNode of pivotNode
+        newParent.parentNode = pivotNode.parentNode;
+
+        //Assigning root to newParent if parent of pivotNode was empty
+        if(isEmpty(pivotNode.parentNode)) {
+            root = newParent;
+        //Making newParent parent of pivotNode if pivotNode was leftLeaf
+        } else if(pivotNode.parentNode.leftLeaf == pivotNode) {
+            pivotNode.parentNode.leftLeaf = newParent;
+        //Making newParent parent of pivotNode if pivotNode was leftLeaf
+        } else {
+            pivotNode.parentNode.rightLeaf = newParent;
+        }
+
+        //Assigning newParent as a parent of pivotNode
+        //and making pivotNode the leftLeaf of newParent
+        pivotNode.parentNode = newParent;
+        newParent.leftLeaf = pivotNode;
+    }
 }
