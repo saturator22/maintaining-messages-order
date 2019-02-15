@@ -77,7 +77,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
         while(parent.nodeColor == RED.color) {
             grandParent = parent.parentNode;
 
-            //If parent of node is left leaf
+            //If parent of node is left leaf of its parent
             if(parent == grandParent.leftLeaf) {
 
                 uncle = grandParent.rightLeaf;
@@ -91,13 +91,12 @@ public class ResourcesStorage <T extends Comparable<T>>{
                 } else if(node == parent.leftLeaf) {
                     parent.nodeColor = BLACK.color;
                     grandParent.nodeColor = RED.color;
-                    //TODO rotateRight()
+                    rotateRight(grandParent);
                 //If node is parent right leaf & uncle is BLACK
                 } else {
-                    node = parent;
-                    //TODO rotateLeft()
+                    rotateLeft(parent);
                 }
-            //If parent of node is right leaf
+            //If parent of node is right leaf of its parent
             } else {
 
                 uncle = grandParent.leftLeaf;
@@ -109,13 +108,12 @@ public class ResourcesStorage <T extends Comparable<T>>{
                     node = grandParent;
                     //If node is parent left leaf & uncle is BLACK
                 } else if(node == parent.leftLeaf) {
-                    node = parent;
-                    //TODO rotateRight()
+                    rotateRight(parent);
                     //If node is parent right leaf & uncle is BLACK
                 } else {
                     parent.nodeColor = BLACK.color;
                     grandParent.nodeColor = RED.color;
-                    //TODO rotateLeft()
+                    rotateLeft(grandParent);
                 }
             }
         }
