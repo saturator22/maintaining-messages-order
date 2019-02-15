@@ -14,6 +14,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
         return node == emptyNode;
     }
 
+    //TODO handling size after rotation
     public int size() {
         if(root == emptyNode) {
             return 0;
@@ -22,7 +23,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
     }
 
     public void appendNode(T item) {
-        appendNode(new ResourceNode<T>(item));
+        appendNode(new ResourceNode<>(item));
     }
 
     private void appendNode(ResourceNode<T> node) {
@@ -74,6 +75,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
         ResourceNode<T> parent = node.parentNode;
 
         //While parent of node is still RED
+        //TODO CHECK REFERENCES ON EACH STEP OF TEST
         while(parent.nodeColor == RED.color) {
             grandParent = parent.parentNode;
 
@@ -94,6 +96,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
                     rotateRight(grandParent);
                 //If node is parent right leaf & uncle is BLACK
                 } else {
+                    node = parent;
                     rotateLeft(parent);
                 }
             //If parent of node is right leaf of its parent
@@ -108,6 +111,7 @@ public class ResourcesStorage <T extends Comparable<T>>{
                     node = grandParent;
                     //If node is parent left leaf & uncle is BLACK
                 } else if(node == parent.leftLeaf) {
+                    node = parent;
                     rotateRight(parent);
                     //If node is parent right leaf & uncle is BLACK
                 } else {
@@ -183,5 +187,41 @@ public class ResourcesStorage <T extends Comparable<T>>{
         //and making pivotNode the leftLeaf of newParent
         pivotNode.parentNode = newParent;
         newParent.leftLeaf = pivotNode;
+    }
+
+    public T getItem(T item) {
+
+        ResourceNode<T> current = root;
+
+        while(!isEmpty(current)) {
+
+            if(item.equals(current.item)) {
+                return current.item;
+            } else if(item.compareTo(current.item) > 0) {
+                current = current.rightLeaf;
+            } else {
+                current = current.leftLeaf;
+            }
+        }
+
+        return null;
+    }
+
+    //For test purposes
+    public ResourceNode<T> getNode(T item) {
+        ResourceNode<T> current = root;
+
+        while(!isEmpty(current)) {
+
+            if(item.equals(current.item)) {
+                return current;
+            } else if(item.compareTo(current.item) > 0) {
+                current = current.rightLeaf;
+            } else {
+                current = current.leftLeaf;
+            }
+        }
+
+        return null;
     }
 }
