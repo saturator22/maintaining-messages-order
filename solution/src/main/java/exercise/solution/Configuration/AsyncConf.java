@@ -15,10 +15,10 @@ public class AsyncConf {
     public Executor asyncWorker() {
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(4);
-        executor.setQueueCapacity(50);
+
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(50);
+        executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("AsyncWorker - ");
         executor.initialize();
 
