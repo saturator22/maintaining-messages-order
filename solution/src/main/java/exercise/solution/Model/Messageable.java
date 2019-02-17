@@ -1,5 +1,5 @@
 package exercise.solution.Model;
 
-public interface Messegeable {
+public interface Messageable {
 
 }
