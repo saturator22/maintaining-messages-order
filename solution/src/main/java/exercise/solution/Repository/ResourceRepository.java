@@ -1,6 +1,9 @@
 package exercise.solution.Repository;
 
+import exercise.solution.Controller.MessageController;
 import exercise.solution.Model.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -10,7 +13,10 @@ public class ResourceRepository {
 
     Set<Message> messageSet = new TreeSet<>();
 
+    private static Logger log = LoggerFactory.getLogger(MessageController.class);
+
     public void appendMessage(Message message) {
+        log.info("APPEND MESSAGE REPOSITORY");
         this.messageSet.add(message);
     }
 
@@ -21,7 +27,7 @@ public class ResourceRepository {
         while(iterator.hasNext()) {
             messageList.add(iterator.next());
         }
-
+        log.info("GET MESSAGES FROM REPO");
         return messageList;
     }
 
