@@ -13,22 +13,6 @@ public class ResourceStorage {
         this.head = new AtomicMarkableReference<>(EMPTY, false);
     }
 
-//    private ResourceNode search(Messageable searchedKey, ResourceNode leftNode) {
-//        ResourceNode nextOfLeftNode;
-//        ResourceNode rightNode;
-//
-//        while(true) {
-//            ResourceNode current = head;
-//            ResourceNode currentNext = head.getNext();
-//
-//            AtomicReference<ResourceNode> cachedCurrent = new AtomicReference<>(current);
-//            AtomicReference<ResourceNode> cachedCurrentNext = new AtomicReference<>(currentNext);
-//
-//            while(current.getKey().compare())
-//
-//        }
-//    }
-
     public boolean insert(Messageable message) {
         //TODO REFACTOR OF MULTIPLIED PIECES OF CODE
         boolean isInserted = false;
