@@ -2,6 +2,8 @@ package exercise.solution.Resource;
 
 import exercise.solution.Model.Messageable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
 public class ResourceStorage {
@@ -24,7 +26,7 @@ public class ResourceStorage {
                 ResourceNode nodeToInsert = new ResourceNode(message, EMPTY);
                 isInserted = head.compareAndSet(head.getReference(), nodeToInsert,false, false);
             } else{
-                if(message.compare(message, currentNode.key) < 0 && !currentNode.next.isMarked()) {
+                if(message.compare(message, currentNode.key) < 0) {
                     if(currentAtomicNode == head) {
                         ResourceNode nextNode = currentAtomicNode.getReference();
                         ResourceNode nodeToInsert = new ResourceNode(message, nextNode);
@@ -48,6 +50,21 @@ public class ResourceStorage {
         }
         return true;
     }
+
+    public List<Messageable> getState() {
+        List<Messageable> state = new ArrayList<>();
+
+        AtomicMarkableReference<ResourceNode> currentAtomicNode = head;
+
+        while(currentAtomicNode.getReference().key != null) {
+            state.add(currentAtomicNode.getReference().key);
+            currentAtomicNode = currentAtomicNode.getReference().next;
+        }
+
+        return state;
+    }
+
+
 
     //TODO CAS()
 }
