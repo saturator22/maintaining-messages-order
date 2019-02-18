@@ -18,4 +18,13 @@ public abstract class Messageable extends MessageableComparator{
     public long getOffSet() {
         return offSet;
     }
+
+    @Override
+    public String toString() {
+        return "Messageable{" +
+                "timeStampMillis=" + timeStampMillis +
+                ", message='" + message + '\'' +
+                ", offSet=" + offSet +
+                '}';
+    }
 }
