@@ -58,12 +58,9 @@ public class ResourceStorage {
         long offset = messageable.getOffSet();
         AtomicMarkableReference<ResourceNode> currentNode = head;
 
-
         if(offset < 0) {
             offset = size.get() + 1;
-
         }
-
         if(offset > size.get()){
             offset = size.get();
         }
@@ -73,7 +70,6 @@ public class ResourceStorage {
                 currentNode = currentNode.getReference().next;
             }
         }
-
         return insert(messageable, currentNode);
     }
 
