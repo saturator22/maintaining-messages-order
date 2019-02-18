@@ -11,25 +11,21 @@ public class ResourceStorage {
 
     final static ResourceNode EMPTY = new ResourceNode(null, null);
     AtomicMarkableReference<ResourceNode> head;
-    AtomicMarkableReference<ResourceNode> tail;
     AtomicInteger size = new AtomicInteger(0);
 
     public ResourceStorage() {
         this.head = new AtomicMarkableReference<>(EMPTY, false);
-        this.tail = new AtomicMarkableReference<>(EMPTY, false);
     }
 
     private boolean insert(Messageable message, AtomicMarkableReference<ResourceNode> currentAtomicNode) {
         boolean isInserted = false;
-//        AtomicMarkableReference<ResourceNode> currentAtomicNode = head;
         ResourceNode headNode = head.getReference();
-        ResourceNode tailNode = tail.getReference();
 
         while(!isInserted) {
             ResourceNode currentNode = currentAtomicNode.getReference();
             ResourceNode nodeToInsert = new ResourceNode(message, currentNode);
 
-            if(headNode.key == null) {
+            if(headNode == EMPTY) {
                 currentAtomicNode.attemptMark(currentNode, true);
                 isInserted = compareAndSet(currentAtomicNode, nodeToInsert, headNode);
             } else{
@@ -42,17 +38,19 @@ public class ResourceStorage {
                         isInserted = compareAndSet(currentAtomicNode, nodeToInsert, currentNode);
                     }
                 } else if(message.compare(message, currentNode.key) >= 0) {
-                    if(currentNode.key != null) {
+                    if(currentNode.key != null && message.compare(message, currentNode.next.getReference().key) < 0) {
                         currentAtomicNode = currentNode.next;
                     } else {
-                        currentAtomicNode.attemptMark(currentNode, true);
-                        isInserted = compareAndSet(currentAtomicNode, nodeToInsert, tailNode);
+                        ResourceNode nextOfCurrent = currentNode.next.getReference();
+                        ResourceNode newNode = new ResourceNode(message, nextOfCurrent);
+                        currentAtomicNode.getReference().next.attemptMark(nextOfCurrent, true);
+                        isInserted = compareAndSet(currentAtomicNode.getReference().next, newNode, nextOfCurrent);
                     }
                 }
             }
         }
-        size.getAndIncrement();
-        System.out.println(size);
+        System.out.println(getSize());
+        System.out.println(getState());
         return true;
     }
 
@@ -60,8 +58,9 @@ public class ResourceStorage {
         long offset = messageable.getOffSet();
         AtomicMarkableReference<ResourceNode> currentNode = head;
 
+
         if(offset < 0) {
-            offset = size.get();
+            offset = size.get() + 1;
 
         }
 
@@ -69,7 +68,7 @@ public class ResourceStorage {
             offset = size.get();
         }
 
-        for(long i = 0; i < offset; i++) {
+        for(long i = 1; i < offset; i++) {
             if(currentNode.getReference().key != null) {
                 currentNode = currentNode.getReference().next;
             }
@@ -80,7 +79,11 @@ public class ResourceStorage {
 
     private boolean compareAndSet(AtomicMarkableReference<ResourceNode> currentReferencedNode,
                                   ResourceNode nodeToInsert, ResourceNode currentNode) {
-        return currentReferencedNode.compareAndSet(currentNode, nodeToInsert, true, false);
+        if (currentReferencedNode.compareAndSet(currentNode, nodeToInsert, true, false)) {
+            size.getAndIncrement();
+            return true;
+        }
+        return false;
     }
 
     public List<Messageable> getState() {
@@ -98,10 +101,6 @@ public class ResourceStorage {
 
     public AtomicMarkableReference<ResourceNode> getHead() {
         return head;
-    }
-
-    public AtomicMarkableReference<ResourceNode> getTail() {
-        return tail;
     }
 
     public int getSize() {
