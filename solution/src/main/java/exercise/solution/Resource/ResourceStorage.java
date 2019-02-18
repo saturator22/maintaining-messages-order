@@ -9,9 +9,9 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 
 public class ResourceStorage {
 
-    final static ResourceNode EMPTY = new ResourceNode(null, null);
-    AtomicMarkableReference<ResourceNode> head;
-    AtomicInteger size = new AtomicInteger(0);
+    private final static ResourceNode EMPTY = new ResourceNode(null, null);
+    private AtomicMarkableReference<ResourceNode> head;
+    private AtomicInteger size = new AtomicInteger(0);
 
     public ResourceStorage() {
         this.head = new AtomicMarkableReference<>(EMPTY, false);
