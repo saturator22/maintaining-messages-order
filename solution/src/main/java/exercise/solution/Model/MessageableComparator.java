@@ -14,6 +14,10 @@ public class MessageableComparator<T extends Messageable> implements Comparator<
         Long m1offSet = m1.getOffSet();
         Long m2offSet = m2.getOffSet();
 
+        if(m1offSet == 0 && m1offSet > m2offSet) {
+            return -1;
+        }
+
         int offSetComp = m1offSet.compareTo(m2offSet);
 
         if (offSetComp != 0) {
