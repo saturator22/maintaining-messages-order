@@ -1,15 +1,16 @@
 package exercise.solution.Resource;
 
-import exercise.solution.Model.Messageable;
+import exercise.solution.Model.Commit;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
+@Component
 public class ResourceStorage {
 
     private final static ResourceNode EMPTY = new ResourceNode(null, null);
+    StringBuffer state = new StringBuffer();
     private AtomicMarkableReference<ResourceNode> head;
     private AtomicInteger size = new AtomicInteger(0);
 
@@ -17,19 +18,20 @@ public class ResourceStorage {
         this.head = new AtomicMarkableReference<>(EMPTY, false);
     }
 
-    private boolean insert(Messageable message, AtomicMarkableReference<ResourceNode> currentAtomicNode) {
+    public String insert(Commit commit) {
         boolean isInserted = false;
         ResourceNode headNode = head.getReference();
+        AtomicMarkableReference<ResourceNode> currentAtomicNode = head;
 
         while(!isInserted) {
             ResourceNode currentNode = currentAtomicNode.getReference();
-            ResourceNode nodeToInsert = new ResourceNode(message, currentNode);
+            ResourceNode nodeToInsert = new ResourceNode(commit, currentNode);
 
             if(headNode == EMPTY) {
                 currentAtomicNode.attemptMark(currentNode, true);
                 isInserted = compareAndSet(currentAtomicNode, nodeToInsert, headNode);
             } else{
-                if(message.compare(message, currentNode.key) < 0) {
+                if(commit.getTimeStampMillis().compare(commit.getTimeStampMillis(), currentNode.key.getTimeStampMillis()) < 0) {
                     if(currentAtomicNode == head) {
                         currentAtomicNode.attemptMark(currentNode, true);
                         isInserted = compareAndSet(currentAtomicNode, nodeToInsert, headNode);
@@ -37,40 +39,19 @@ public class ResourceStorage {
                         currentAtomicNode.attemptMark(currentNode, true);
                         isInserted = compareAndSet(currentAtomicNode, nodeToInsert, currentNode);
                     }
-                } else if(message.compare(message, currentNode.key) >= 0) {
-                    if(currentNode.key != null && message.compare(message, currentNode.next.getReference().key) < 0) {
+                } else if(commit.getTimeStampMillis().compare(commit.getTimeStampMillis(), currentNode.key.getTimeStampMillis()) >= 0) {
+                    if(currentNode.next.getReference().key != null) {
                         currentAtomicNode = currentNode.next;
                     } else {
                         ResourceNode nextOfCurrent = currentNode.next.getReference();
-                        ResourceNode newNode = new ResourceNode(message, nextOfCurrent);
+                        ResourceNode newNode = new ResourceNode(commit, nextOfCurrent);
                         currentAtomicNode.getReference().next.attemptMark(nextOfCurrent, true);
                         isInserted = compareAndSet(currentAtomicNode.getReference().next, newNode, nextOfCurrent);
                     }
                 }
             }
         }
-        System.out.println(getSize());
-        System.out.println(getState());
-        return true;
-    }
-
-    public boolean insert(Messageable messageable) {
-        long offset = messageable.getOffSet();
-        AtomicMarkableReference<ResourceNode> currentNode = head;
-
-        if(offset < 0) {
-            offset = size.get() + 1;
-        }
-        if(offset > size.get()){
-            offset = size.get();
-        }
-
-        for(long i = 1; i < offset; i++) {
-            if(currentNode.getReference().key != null) {
-                currentNode = currentNode.getReference().next;
-            }
-        }
-        return insert(messageable, currentNode);
+        return getState();
     }
 
     private boolean compareAndSet(AtomicMarkableReference<ResourceNode> currentReferencedNode,
@@ -82,17 +63,33 @@ public class ResourceStorage {
         return false;
     }
 
-    public List<Messageable> getState() {
-        List<Messageable> state = new ArrayList<>();
-
-        AtomicMarkableReference<ResourceNode> currentAtomicNode = head;
+    private void updateState() {
+        state.setLength(0);
+        AtomicMarkableReference<ResourceNode> currentAtomicNode = this.head;
 
         while(currentAtomicNode.getReference().key != null) {
-            state.add(currentAtomicNode.getReference().key);
+            Commit currentCommit = currentAtomicNode.getReference().key;
+
+            int offSet = currentCommit.getOffSet().getOffSet();
+            String message = currentCommit.getMessage().getMessage();
+
+            if(state.length() == 0) {
+                offSet = state.length();
+            } else if(state.length() < offSet) {
+                offSet = state.length();
+            } else if(offSet < 0) {
+                offSet = state.length() + offSet + 1;
+            }
+
+            state.insert(offSet, message);
             currentAtomicNode = currentAtomicNode.getReference().next;
         }
 
-        return state;
+    }
+
+    public String getState() {
+        updateState();
+        return state.toString();
     }
 
     public AtomicMarkableReference<ResourceNode> getHead() {
