@@ -1,6 +1,14 @@
 package exercise.solution.Model;
 
+public class Message {
 
-public class Message extends Messageable{
+    private String message;
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
