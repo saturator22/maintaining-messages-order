@@ -1,37 +1,30 @@
 package exercise.solution.Repository;
 
 import exercise.solution.Controller.MessageController;
-import exercise.solution.Model.Message;
+import exercise.solution.Model.Commit;
+import exercise.solution.Resource.ResourceStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.*;
 
 @Repository
 public class ResourceRepository {
 
-    Set<Message> messageSet = new TreeSet<>();
+    @Autowired
+    ResourceStorage resourceStorage;
 
     private static Logger log = LoggerFactory.getLogger(MessageController.class);
 
-    public void appendMessage(Message message) {
+    public void appendMessage(Commit commit) {
         log.info("APPEND MESSAGE REPOSITORY");
-        this.messageSet.add(message);
+
+        this.resourceStorage.insert(commit);
     }
 
-    public List<Message> getMessages() {
-        List<Message> messageList = new ArrayList<>();
-        Iterator<Message> iterator = this.messageSet.iterator();
+    public String getMessages() {
 
-        while(iterator.hasNext()) {
-            messageList.add(iterator.next());
-        }
         log.info("GET MESSAGES FROM REPO");
-        return messageList;
-    }
-
-    public void empty() {
-        this.messageSet.clear();
+        return resourceStorage.getState();
     }
 }
