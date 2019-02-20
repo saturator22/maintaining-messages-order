@@ -1,8 +1,7 @@
 package exercise.solution.Model;
 
-//import exercise.solution.Comparator.OffSetComparator;
 
-public class OffSet {
+public class OffSet implements Comparable<OffSet> {
 
     private int offSet;
 
@@ -10,7 +9,8 @@ public class OffSet {
         return offSet;
     }
 
-    public void setOffSet(int offSet) {
-        this.offSet = offSet;
+    @Override
+    public int compareTo(OffSet other) {
+        return Integer.compare(this.offSet, other.offSet);
     }
 }

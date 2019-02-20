@@ -1,8 +1,6 @@
 package exercise.solution.Model;
 
-import exercise.solution.Comparator.TimeStampComparator;
-
-public class TimeStampMillis extends TimeStampComparator {
+public class TimeStampMillis implements Comparable<TimeStampMillis> {
 
     private long timeStampMillis;
 
@@ -10,7 +8,8 @@ public class TimeStampMillis extends TimeStampComparator {
         return timeStampMillis;
     }
 
-    public void setTimeStampMillis(long timeStampMillis) {
-        this.timeStampMillis = timeStampMillis;
+    @Override
+    public int compareTo(TimeStampMillis other) {
+        return Long.compare(this.timeStampMillis, other.timeStampMillis);
     }
 }
