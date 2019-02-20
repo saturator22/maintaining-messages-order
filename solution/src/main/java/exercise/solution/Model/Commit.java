@@ -19,18 +19,6 @@ public class Commit {
         return offSet;
     }
 
-    public void setTimeStampMillis(TimeStampMillis timeStampMillis) {
-        this.timeStampMillis = timeStampMillis;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
-    }
-
-    public void setOffSet(OffSet offSet) {
-        this.offSet = offSet;
-    }
-
     @Override
     public String toString() {
         return getMessage().getMessage();
