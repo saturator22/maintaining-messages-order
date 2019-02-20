@@ -35,9 +35,7 @@ public class ResourceState {
 
     private int setOffSet(StringBuffer currentState, int offSet) {
 
-        if(currentState.length() == 0) {
-            offSet = currentState.length();
-        } else if(currentState.length() < offSet) {
+        if(currentState.length() < offSet || currentState.length() == 0) {
             offSet = currentState.length();
         } else if(offSet < 0) {
             offSet = currentState.length() + offSet + 1;
