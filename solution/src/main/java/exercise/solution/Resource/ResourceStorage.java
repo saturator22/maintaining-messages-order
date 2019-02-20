@@ -1,7 +1,6 @@
 package exercise.solution.Resource;
 
 import exercise.solution.Model.Commit;
-import exercise.solution.Model.OffSet;
 import exercise.solution.Model.TimeStampMillis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,6 @@ public class ResourceStorage {
 
     public void insert(Commit newCommit) {
         boolean isInserted = false;
-        ResourceNode headNode = head.getReference();
         AtomicMarkableReference<ResourceNode> currentAtomicNode = head;
 
         while(!isInserted) {
@@ -33,38 +31,48 @@ public class ResourceStorage {
             TimeStampMillis currentCommitTimeStamp;
             TimeStampMillis newCommitTimeStamp;
 
-            OffSet currentCommitOffSet;
-            OffSet newCommitOffSet;
-
-            if(headNode == EMPTY) {
-                isInserted = insertNode(currentAtomicNode, nodeToInsert, headNode);
+            if(getHeadNode() == EMPTY) {
+                isInserted = insertNode(currentAtomicNode, nodeToInsert, currentNode);
             } else{
                 currentCommitTimeStamp = currentNode.key.getTimeStampMillis();
                 newCommitTimeStamp = newCommit.getTimeStampMillis();
 
                 if(newCommitTimeStamp.compareTo(currentCommitTimeStamp) < 0) {
-                    if(currentAtomicNode == head) {
-                        isInserted = insertNode(currentAtomicNode, nodeToInsert, headNode);
-                    } else {
-                        isInserted = insertNode(currentAtomicNode, nodeToInsert, currentNode);
-                    }
-                } else if(newCommitTimeStamp.compareTo(currentCommitTimeStamp) >= 0) {
-                    currentCommitOffSet = currentNode.key.getOffSet();
-                    newCommitOffSet = newCommit.getOffSet();
-
+                    isInserted = insertBefore(currentAtomicNode, nodeToInsert, currentNode);
+                } else {
                     if(currentNode.next.getReference().key != null) {
                         currentAtomicNode = currentNode.next;
-                    } else if(newCommitOffSet.compareTo(currentCommitOffSet) == 0) {
-                        isInserted = insertNode(currentAtomicNode, nodeToInsert, currentNode);
-                    }else {
-                        ResourceNode nextOfCurrent = currentNode.next.getReference();
-                        ResourceNode newNode = new ResourceNode(newCommit, nextOfCurrent);
-                        isInserted = insertNode(currentAtomicNode.getReference().next, newNode, nextOfCurrent);
                     }
+                    isInserted = insertAfter(currentAtomicNode, nodeToInsert, currentNode);
                 }
             }
         }
         resourceState.updateState(head);
+    }
+
+    private boolean insertAfter(AtomicMarkableReference<ResourceNode> currentAtomicNode,
+                                ResourceNode nodeToInsert, ResourceNode currentNode) {
+        boolean isInserted;
+
+        ResourceNode nextOfCurrent = currentNode.next.getReference();
+        ResourceNode newNode = new ResourceNode(nodeToInsert.key, nextOfCurrent);
+        isInserted = insertNode(currentAtomicNode.getReference().next, newNode, nextOfCurrent);
+
+        return isInserted;
+    }
+
+    private boolean insertBefore(AtomicMarkableReference<ResourceNode> currentAtomicNode,
+                                 ResourceNode nodeToInsert, ResourceNode currentNode) {
+        boolean isInserted;
+        ResourceNode headNode = head.getReference();
+
+        if(currentAtomicNode == head) {
+            isInserted = insertNode(currentAtomicNode, nodeToInsert, headNode);
+        } else {
+            isInserted = insertNode(currentAtomicNode, nodeToInsert, currentNode);
+        }
+
+        return isInserted;
     }
 
     private boolean insertNode(AtomicMarkableReference<ResourceNode> currentAtomicNode,
@@ -78,5 +86,9 @@ public class ResourceStorage {
                                   ResourceNode nodeToInsert, ResourceNode currentNode) {
 
         return currentReferencedNode.compareAndSet(currentNode, nodeToInsert, true, false);
+    }
+
+    public ResourceNode getHeadNode() {
+        return head.getReference();
     }
 }
