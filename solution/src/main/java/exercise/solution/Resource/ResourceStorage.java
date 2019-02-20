@@ -23,13 +23,12 @@ public class ResourceStorage {
     public void insert(Commit newCommit) {
         boolean isInserted = false;
         AtomicMarkableReference<ResourceNode> currentAtomicNode = head;
+        TimeStampMillis currentCommitTimeStamp;
+        TimeStampMillis newCommitTimeStamp;
 
         while(!isInserted) {
             ResourceNode currentNode = currentAtomicNode.getReference();
             ResourceNode nodeToInsert = new ResourceNode(newCommit, currentNode);
-
-            TimeStampMillis currentCommitTimeStamp;
-            TimeStampMillis newCommitTimeStamp;
 
             if(getHeadNode() == EMPTY) {
                 isInserted = insertNode(currentAtomicNode, nodeToInsert, currentNode);
@@ -88,7 +87,7 @@ public class ResourceStorage {
         return currentReferencedNode.compareAndSet(currentNode, nodeToInsert, true, false);
     }
 
-    public ResourceNode getHeadNode() {
+    private ResourceNode getHeadNode() {
         return head.getReference();
     }
 }
