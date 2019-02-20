@@ -2,6 +2,7 @@ package exercise.solution.Repository;
 
 import exercise.solution.Controller.MessageController;
 import exercise.solution.Model.Commit;
+import exercise.solution.Resource.ResourceState;
 import exercise.solution.Resource.ResourceStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,9 @@ public class ResourceRepository {
     @Autowired
     ResourceStorage resourceStorage;
 
+    @Autowired
+    ResourceState resourceState;
+
     private static Logger log = LoggerFactory.getLogger(MessageController.class);
 
     public void appendMessage(Commit commit) {
@@ -25,6 +29,6 @@ public class ResourceRepository {
     public String getMessages() {
 
         log.info("GET MESSAGES FROM REPO");
-        return resourceStorage.getState();
+        return resourceState.getState();
     }
 }
