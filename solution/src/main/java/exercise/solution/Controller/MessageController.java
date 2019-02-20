@@ -26,17 +26,17 @@ public class MessageController{
     @PostMapping("/message")
     public @ResponseBody CompletableFuture<String> storeMessage(@RequestBody Commit commit) {
         log.info("STORE MESSAGE STARTED CONTROLLER WITH MESSAGE: " + commit);
-        resourceService.storeMessage(commit);
-        return getMessages();
+        commitService.storeMessage(commit);
+        return getState();
     }
 
     @Async("asyncWorker")
     @GetMapping("/resource")
     public @ResponseBody
-    CompletableFuture<String> getMessages() {
-        String messageList = resourceService.getMessages();
+    CompletableFuture<String> getState() {
+        String state = resourceService.getMessages();
 
-        return CompletableFuture.completedFuture(messageList);
+        return CompletableFuture.completedFuture(state);
     }
 
 }
