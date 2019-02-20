@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class ResourceService {
 
     @Autowired
-    ResourceRepository resourceRepository;
+    private ResourceRepository resourceRepository;
 
     public void storeMessage(Commit commit) {
         resourceRepository.appendMessage(commit);

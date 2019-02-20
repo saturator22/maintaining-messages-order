@@ -13,10 +13,10 @@ import java.util.concurrent.CompletableFuture;
 public class MessageController{
 
     @Autowired
-    CommitService commitService;
+    private CommitService commitService;
 
     @Autowired
-    ResourceService resourceService;
+    private ResourceService resourceService;
 
     @Async("asyncWorker")
     @PostMapping("/message")

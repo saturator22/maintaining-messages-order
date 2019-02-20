@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 @Component
 public class ResourceState {
 
-    StringBuffer state;
+    private StringBuffer state;
 
     public ResourceState() {
         this.state = new StringBuffer();
@@ -19,8 +19,8 @@ public class ResourceState {
         StringBuffer currentState = state;
         currentState.setLength(0);
 
-        while(currentNode.getReference().key != null) {
-            Commit currentCommit = currentNode.getReference().key;
+        while(currentNode.getReference().getKey() != null) {
+            Commit currentCommit = currentNode.getReference().getKey();
 
             int offSet = currentCommit.getOffSet().getOffSet();
             String message = currentCommit.getMessage().getMessage();
@@ -28,9 +28,8 @@ public class ResourceState {
             offSet = setOffSet(currentState, offSet);
 
             currentState.insert(offSet, message);
-            currentNode = currentNode.getReference().next;
+            currentNode = currentNode.getReference().getNext();
         }
-        System.out.println(state);
     }
 
     private int setOffSet(StringBuffer currentState, int offSet) {

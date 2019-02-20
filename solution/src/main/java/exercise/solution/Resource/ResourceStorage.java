@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 public class ResourceStorage {
 
     @Autowired
-    ResourceState resourceState;
+    private ResourceState resourceState;
 
     private final static ResourceNode EMPTY = new ResourceNode(null, null);
     private AtomicMarkableReference<ResourceNode> head;
@@ -33,14 +33,14 @@ public class ResourceStorage {
             if(getHeadNode() == EMPTY) {
                 isInserted = insertNode(currentAtomicNode, nodeToInsert, currentNode);
             } else{
-                currentCommitTimeStamp = currentNode.key.getTimeStampMillis();
+                currentCommitTimeStamp = currentNode.getKey().getTimeStampMillis();
                 newCommitTimeStamp = newCommit.getTimeStampMillis();
 
                 if(newCommitTimeStamp.compareTo(currentCommitTimeStamp) < 0) {
                     isInserted = insertBefore(currentAtomicNode, nodeToInsert, currentNode);
                 } else {
-                    if(currentNode.next.getReference().key != null) {
-                        currentAtomicNode = currentNode.next;
+                    if(currentNode.getNext().getReference().getKey() != null) {
+                        currentAtomicNode = currentNode.getNext();
                     }
                     isInserted = insertAfter(currentAtomicNode, nodeToInsert, currentNode);
                 }
@@ -53,9 +53,9 @@ public class ResourceStorage {
                                 ResourceNode nodeToInsert, ResourceNode currentNode) {
         boolean isInserted;
 
-        ResourceNode nextOfCurrent = currentNode.next.getReference();
-        ResourceNode newNode = new ResourceNode(nodeToInsert.key, nextOfCurrent);
-        isInserted = insertNode(currentAtomicNode.getReference().next, newNode, nextOfCurrent);
+        ResourceNode nextOfCurrent = currentNode.getNext().getReference();
+        ResourceNode newNode = new ResourceNode(nodeToInsert.getKey(), nextOfCurrent);
+        isInserted = insertNode(currentAtomicNode.getReference().getNext(), newNode, nextOfCurrent);
 
         return isInserted;
     }

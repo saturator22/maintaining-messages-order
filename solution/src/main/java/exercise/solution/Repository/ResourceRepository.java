@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 public class ResourceRepository {
 
     @Autowired
-    ResourceStorage resourceStorage;
+    private ResourceStorage resourceStorage;
 
     @Autowired
-    ResourceState resourceState;
+    private ResourceState resourceState;
 
     public void appendMessage(Commit commit) {
         this.resourceStorage.insert(commit);

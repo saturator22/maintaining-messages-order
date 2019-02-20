@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 public class CommitService {
 
     @Autowired
-    ResourceService resourceService;
+    private ResourceService resourceService;
 
-    public void storeMessage(Commit messageable) {
-        resourceService.storeMessage(messageable);
+    public void storeMessage(Commit commit) {
+        resourceService.storeMessage(commit);
     }
 }
