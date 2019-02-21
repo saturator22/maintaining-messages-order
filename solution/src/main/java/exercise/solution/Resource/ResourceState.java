@@ -14,7 +14,7 @@ public class ResourceState {
         this.state = new StringBuffer();
     }
 
-    void updateState(AtomicMarkableReference<ResourceNode> currentNode) {
+    synchronized void updateState(AtomicMarkableReference<ResourceNode> currentNode) {
 
         StringBuffer currentState = state;
         currentState.setLength(0);
@@ -22,13 +22,12 @@ public class ResourceState {
         while(currentNode.getReference().getKey() != null) {
             Commit currentCommit = currentNode.getReference().getKey();
 
-            int offSet = currentCommit.getOffSet().getOffSet();
+            Integer offSet = currentCommit.getOffSet().getOffSet();
             String message = currentCommit.getMessage().getMessage();
 
-            synchronized(currentState) {
-                int offSetToInsert = setOffSet(currentState, offSet);
-                currentState.insert(offSetToInsert, message);
-            }
+            offSet = setOffSet(currentState, offSet);
+            currentState.insert(offSet, message);
+
             currentNode = currentNode.getReference().getNext();
         }
     }
@@ -39,6 +38,9 @@ public class ResourceState {
             offSet = currentState.length();
         } else if(offSet < 0) {
             offSet = currentState.length() + offSet + 1;
+            if(offSet < currentState.length() && offSet < 0) {
+                offSet = currentState.length();
+            }
         }
         return offSet;
     }
