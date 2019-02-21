@@ -25,9 +25,10 @@ public class ResourceState {
             int offSet = currentCommit.getOffSet().getOffSet();
             String message = currentCommit.getMessage().getMessage();
 
-            offSet = setOffSet(currentState, offSet);
-
-            currentState.insert(offSet, message);
+            synchronized(currentState) {
+                int offSetToInsert = setOffSet(currentState, offSet);
+                currentState.insert(offSetToInsert, message);
+            }
             currentNode = currentNode.getReference().getNext();
         }
     }
@@ -39,7 +40,6 @@ public class ResourceState {
         } else if(offSet < 0) {
             offSet = currentState.length() + offSet + 1;
         }
-
         return offSet;
     }
 
