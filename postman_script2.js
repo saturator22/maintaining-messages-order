@@ -6,6 +6,7 @@
 //6. d na początku
 //7. a na 4 pozycje
 //8. l na 2 od konca
+// {"timeStampMillis": {"timeStampMillis":17},"message":{"message":"l"},"offSet":{"offSet":-2}} <-- tego jSona należy umieścić w Body
 //wynik : dcfxakla
 
 const echoPostRequest = {
@@ -93,17 +94,3 @@ const echoPostRequest8 = {
 pm.sendRequest(echoPostRequest8, function (err, res) {
   console.log(err ? err : res.json());
 });
-const echoPostRequest9 = {
-  url: 'http://localhost:8080/message',
-  method: 'POST',
-  header: {'content-type':'application/json'},
-  body: {
-    mode: 'raw',
-    raw: JSON.stringify({"timeStampMillis": {"timeStampMillis":17},"message":{"message":"l"},	"offSet":{"offSet":-2}})
-  }
-};
-pm.sendRequest(echoPostRequest9, function (err, res) {
-  console.log(err ? err : res.json());
-});
-
-pm.environment.set("variable_key", "variable_value");

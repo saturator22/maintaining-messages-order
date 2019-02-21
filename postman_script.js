@@ -1,3 +1,7 @@
+
+//"abstrakcyjny przyklad"
+//{"timeStampMillis": {"timeStampMillis":14},"message":{"message":"f"},	"offSet":{"offSet":0}} <-- tą linijkę należy wkleić w Body
+
 const echoPostRequest = {
   url: 'http://localhost:8080/message',
   method: 'POST',
@@ -47,7 +51,6 @@ pm.sendRequest(echoPostRequest4, function (err, res) {
   console.log(err ? err : res.json());
 });
 
-//"abstrakcyjny przyklad"
 
 const echoPostRequest6 = {
   url: 'http://localhost:8080/message',
@@ -59,17 +62,5 @@ const echoPostRequest6 = {
   }
 };
 pm.sendRequest(echoPostRequest6, function (err, res) {
-  console.log(err ? err : res.json());
-});
-const echoPostRequest7 = {
-  url: 'http://localhost:8080/message',
-  method: 'POST',
-  header: {'content-type':'application/json'},
-  body: {
-    mode: 'raw',
-    raw: JSON.stringify({"timeStampMillis": {"timeStampMillis":14},"message":{"message":"f"},	"offSet":{"offSet":0}})
-  }
-};
-pm.sendRequest(echoPostRequest7, function (err, res) {
   console.log(err ? err : res.json());
 });
