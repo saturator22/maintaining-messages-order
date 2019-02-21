@@ -33,14 +33,20 @@ public class ResourceState {
     }
 
     private int setOffSet(StringBuffer currentState, int offSet) {
+        int stateLength = currentState.length();
 
-        if(currentState.length() <= offSet) {
-            offSet = currentState.length();
+        if(stateLength <= offSet) {
+            offSet = stateLength;
         } else if(offSet < 0) {
-            offSet = currentState.length() + offSet + 1;
-            if(offSet < currentState.length() && offSet < 0) {
-                offSet = currentState.length();
-            }
+            offSet = stateLength + offSet + 1;
+            offSet = validateOffSet(stateLength, offSet);
+        }
+        return offSet;
+    }
+
+    private int validateOffSet(int stateLength, int offSet) {
+        if(offSet < stateLength && offSet < 0) {
+            offSet = stateLength;
         }
         return offSet;
     }
